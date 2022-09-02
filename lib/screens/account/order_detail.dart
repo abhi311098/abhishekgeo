@@ -10,13 +10,13 @@ import 'package:geomedipath/screens/navigation/home.dart';
 import 'package:geomedipath/widgets/all_colors.dart';
 import 'package:geomedipath/widgets/text_design.dart';
 import 'package:http/http.dart' as http;
-import 'package:razorpay_flutter/razorpay_flutter.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OrderDetail extends StatefulWidget {
   var id;
 
-  OrderDetail({Key key, this.id}) : super(key: key);
+  OrderDetail({Key key, this.id});
 
   @override
   _OrderDetailState createState() => _OrderDetailState();

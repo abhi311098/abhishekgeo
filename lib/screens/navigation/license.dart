@@ -9,7 +9,7 @@ import 'package:geomedipath/widgets/text_design.dart';
 import 'package:http/http.dart' as http;
 
 class License extends StatefulWidget {
-  License({Key key}) : super(key: key);
+  License({Key key});
 
   @override
   State<License> createState() => _LicenseState();

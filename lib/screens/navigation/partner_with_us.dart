@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 class PartnerWithUs extends StatefulWidget {
-  PartnerWithUs({Key key}) : super(key: key);
+  PartnerWithUs({Key key});
 
   @override
   State<PartnerWithUs> createState() => _PartnerWithUsState();
@@ -78,11 +78,11 @@ class _PartnerWithUsState extends State<PartnerWithUs> {
         builder: (context) => Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: true,
-            backgroundColor: Colors.white,
+            backgroundColor: orangeColor,
             title: TextDesign(
-              text: "Edit Address",
+              text: "Partner with us",
               fontSize: 18,
-              colorName: Colors.black87,
+              colorName: Colors.white,
             ),
           ),
           backgroundColor: background,

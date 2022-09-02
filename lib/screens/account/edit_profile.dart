@@ -108,7 +108,6 @@ class _EditProfileState extends State<EditProfile> {
         phone.text = map['phone'];
         email.text = map['email'];
         address.text = map['address'];
-        _chosenValue = map['city'].toString().toUpperCase();
         selectValue = map['gender'];
         selectedDate = map['dob'].toString() == "" ? DateTime.now() : DateTime.tryParse(map['dob']);
       });
@@ -143,7 +142,6 @@ class _EditProfileState extends State<EditProfile> {
         "address": address.text,
         "gender": selectValue,
         "dob": selectedDate.toIso8601String(),
-        "city": _chosenValue,
       });
       if (response.statusCode == 200) {
         setState(
@@ -192,7 +190,6 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   var selectValue;
-  String _chosenValue;
   var _formkey = GlobalKey<FormState>();
 
   @override
@@ -473,37 +470,6 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                               ],
                             ),
-                            Container(
-                              width: double.infinity,
-                              child: DropdownButton<String>(
-                                value: _chosenValue,
-                                isExpanded: true,
-                                style: TextStyle(color: Colors.black),
-                                items: <String>[
-                                  "DELHI",
-                                  "GURUGRAM",
-                                  "NOIDA"
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                                hint: Text(
-                                  "Select Your City",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 4.5 * unitHeight,
-                                      fontFamily: "Roboto",
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                onChanged: (String value) {
-                                  setState(() {
-                                    _chosenValue = value;
-                                  });
-                                },
-                              ),
-                            ),
                             InkWell(
                               child: Container(
                                 width: double.infinity,
@@ -528,8 +494,7 @@ class _EditProfileState extends State<EditProfile> {
                               onTap: () {
                                 setState(() {
                                   if (_formkey.currentState.validate()) {
-                                    if (_chosenValue == null &&
-                                        selectValue == null) {
+                                    if (selectValue == null) {
                                       Fluttertoast.showToast(
                                           msg: "Something is missing",
                                           backgroundColor:

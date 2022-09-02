@@ -28,7 +28,7 @@ class _PasswordState extends State<Password> {
     http.Response response;
     var url = Uri.parse("https://app.geomedipath.com/App/ForgotPassword");
     response = await http.post(url, body: {
-      "type": "password",
+      "action": "password",
       "phone": widget.number,
       "password": userPassword.text,
     });

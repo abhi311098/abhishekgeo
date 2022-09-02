@@ -20,7 +20,8 @@ class EditAddress extends StatefulWidget {
   String addressId;
   bool routeFromTimeslot;
 
-  EditAddress({Key key, this.newAddress, this.addressId, this.routeFromTimeslot}) : super(key: key);
+  EditAddress(
+      {Key key, this.newAddress, this.addressId, this.routeFromTimeslot});
 
   @override
   _EditAddressState createState() => _EditAddressState();
@@ -50,7 +51,7 @@ class _EditAddressState extends State<EditAddress> {
     var url = Uri.parse(
       newAddress == "new"
           ? "https://app.geomedipath.com/App/Address/"
-          : "https://app.geomedipath.com/App/Address/${widget.addressId}",
+          : "https://app.geomedipath.com/App/Address/${widget.addressId}/${pin.text}",
     );
     print(newAddress);
     print(widget.addressId);
@@ -68,6 +69,7 @@ class _EditAddressState extends State<EditAddress> {
           "type" +
           _site,
     );
+    print("url $url");
     response = newAddress == "new"
         ? await http.post(url, body: {
             "user_id": logintoken,
@@ -85,7 +87,7 @@ class _EditAddressState extends State<EditAddress> {
             "pin": pin.text,
             "type": _site,
           });
-    return response.body;
+    return jsonDecode(response.body);
   }
 
   Future fetchdata() async {
@@ -120,7 +122,6 @@ class _EditAddressState extends State<EditAddress> {
           _streamController.add(false);
         });
       }
-
     } on SocketException {
       setState(() {
         net = false;
@@ -153,14 +154,15 @@ class _EditAddressState extends State<EditAddress> {
 
   @override
   Widget build(BuildContext context) {
+    print("Edit Address => ${widget.routeFromTimeslot}");
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        backgroundColor: Colors.white,
+        backgroundColor: orangeColor,
         title: TextDesign(
           text: "Edit Address",
           fontSize: 18,
-          colorName: Colors.black87,
+          colorName: Colors.white,
         ),
       ),
       backgroundColor: background,
@@ -245,7 +247,7 @@ class _EditAddressState extends State<EditAddress> {
                         validator: (value) {
                           if (value.isEmpty) {
                             return "Please Enter Your Phone Number";
-                          } else if(value.length != 10) {
+                          } else if (value.length != 10) {
                             return "Please Enter Your 10 digit Phone Number";
                           }
                           return null;
@@ -297,7 +299,7 @@ class _EditAddressState extends State<EditAddress> {
                         validator: (value) {
                           if (value.isEmpty) {
                             return "Please Enter Your Pincode";
-                          } else if(value.length != 6) {
+                          } else if (value.length != 6) {
                             return "Please Enter Your 6 digit Pincode";
                           }
                           return null;
@@ -396,19 +398,58 @@ class _EditAddressState extends State<EditAddress> {
                               });
                               provideData3().then((value) {
                                 print(value);
+                                print(value.runtimeType);
+                                print(value['status']);
 
-                                if ("true" == value.toString()) {
+                                if ("true" == value["status"].toString() &&
+                                    "true" == value["pincode_err"].toString() &&
+                                    value['msg'][0].toString() ==
+                                        "Address Added Successfully.") {
                                   Future.delayed(Duration(seconds: 3), () {
-                                    widget.routeFromTimeslot ? Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder: (context) => TimeSlot(),
-                                      ),
-                                    ) : Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder: (context) => Address(),
-                                      ),
-                                    );
+                                    widget.routeFromTimeslot
+                                        ? Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                              builder: (context) => TimeSlot(),
+                                            ),
+                                          )
+                                        : Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                              builder: (context) => Address(),
+                                            ),
+                                          );
                                   });
+                                } else if ("false" ==
+                                        value["status"].toString() ||
+                                    "false" ==
+                                        value["pincode_err"].toString()) {
+                                  setState(() {
+                                    load = false;
+                                  });
+                                  Future.delayed(Duration(seconds: 0), () {
+                                    Fluttertoast.showToast(
+                                        msg: value['msg'][0].toString(),
+                                        backgroundColor:
+                                            Colors.lightBlue.shade100,
+                                        fontSize: 18,
+                                        gravity: ToastGravity.BOTTOM,
+                                        textColor: Colors.black);
+                                  });
+                                  widget.routeFromTimeslot
+                                      ? Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => TimeSlot(),
+                                    ),
+                                  )
+                                      : Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => Address(),
+                                    ),
+                                  );
+                                } else if (value['msg'][0].toString() ==
+                                    "Address Added Successfully.") {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) => Address()));
                                 } else {
                                   setState(() {
                                     load = false;

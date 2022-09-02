@@ -1,14 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
+//import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geomedipath/widgets/all_colors.dart';
 import 'package:geomedipath/widgets/text_design.dart';
 import 'package:http/http.dart' as http;
-import 'package:open_file/open_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GetACallBack extends StatefulWidget {
@@ -26,7 +24,7 @@ class _GetACallBackState extends State<GetACallBack> {
   var _fileUpload;
   var phone = TextEditingController();
   var name = TextEditingController();
-  var _chosenValue;
+  var city = TextEditingController();
 
   Future fetchData() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -54,46 +52,51 @@ class _GetACallBackState extends State<GetACallBack> {
         Map map = jsonDecode(response.body);
         name.text = map['name'];
         phone.text = map['phone'];
-        _chosenValue = map['city'];
+        city.text = map['city'];
       });
     } else {}
     //return jsonDecode(response.body);
   }
-
+  var resData;
   Future provideData() async {
-    var resData;
+
     print("test_id: ${widget.id}");
     print("phone: ${phone.text}");
-    print("city: ${_chosenValue}");
+    print("city: ${city.text}");
     print("name: ${name.text}");
     print("file: ${_fileUpload}");
     var url = Uri.parse("https://app.geomedipath.com/App/GetCall");
     try {
       Map<String, String> bodyData = {
+
+      };
+      print("resData 3 $bodyData");
+      var request = new http.MultipartRequest('POST', url);
+      print("resData 4 $request");
+      request.fields.addAll({
         "id": widget.id,
         "phone": phone.text,
-        "city": _chosenValue,
+        "city": city.text,
         "name": name.text,
-      };
-      var request = http.MultipartRequest('POST', url);
-      request.fields.addAll(bodyData);
+      });
       request.files.add(
         await http.MultipartFile.fromPath('file', _fileUpload),
       );
-
+      print("resData 5 $request");
       var res = await request.send();
-      res.stream.transform(utf8.decoder).listen((event) {
+      print("resData 2 $res");
+      await res.stream.transform(utf8.decoder).listen((event) {
         setState(() {
+          print("resData 1 $event");
           resData = event;
+
         });
       });
     } catch (e) {
       print(e);
     }
-    print("resData");
+    print("resData $resData");
     return resData;
-    //print(jsonDecode(response.body));
-    //return jsonDecode(response.body);
   }
 
   @override
@@ -207,46 +210,59 @@ class _GetACallBackState extends State<GetACallBack> {
                       ),
                     ),
                     Container(
-                      width: double.infinity,
-                      child: DropdownButton<String>(
-                        value: _chosenValue,
-                        isExpanded: true,
-                        style: TextStyle(color: Colors.black),
-                        items: <String>["DELHI", "GURUGRAM", "NOIDA"]
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        hint: Text(
-                          "Select Your City",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 4.5 * unitHeight,
-                              fontFamily: "Roboto",
-                              fontWeight: FontWeight.w600),
-                        ),
-                        onChanged: (String value) {
-                          setState(() {
-                            _chosenValue = value;
-                          });
-                        },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextDesign(
+                            align: TextAlign.left,
+                            text: "City",
+                            fontSize: 4.5 * unitHeight,
+                            fontfamily: "Roboto",
+                            fontWeight: FontWeight.bold,
+                            colorName: bigTextColor,
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 1,
+                            //height: MediaQuery.of(context).size.height * 0.05,
+                            child: TextFormField(
+                              minLines: 1,
+                              maxLines: 1,
+                              maxLength: 10,
+                              controller: city,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 4.5 * unitHeight,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: "Lato"),
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01,
+                          ),
+                        ],
                       ),
                     ),
-                    ElevatedButton(onPressed: () async {
-                      final result = await FilePicker.platform.pickFiles();
-                             if(result == null) return;
-                      final file = result.files.single.path;
-                      setState(() {
-                        _fileUpload = file;
-                      });
-                      print("Abhishek ${file}");
-                      //openFile(file);
-                    }, child: Text("Upload Prescription",
-                    style: TextStyle(
-                      fontSize: unitHeight * 3
-                    ),)),
+
+                    // ElevatedButton(onPressed: () async {
+                    //   final result = await
+                    //   FilePicker.platform.pickFiles();
+                    //          if(result == null) return;
+                    //   final file = result.files.single.path;
+                    //   setState(() {
+                    //     _fileUpload = file;
+                    //   });
+                    //   print("Abhishek ${file}");
+                    //   //openFile(file);
+                    // }, child: Text("Upload Prescription",
+                    // style: TextStyle(
+                    //   fontSize: unitHeight * 3
+                    // ),)),
                     _fileUpload == null ? Container() : Text(_fileUpload.toString().replaceAll("/data/user/0/com.geomedipath.geomedipath/cache/file_picker/", ""),
                       style: TextStyle(
                           fontSize: unitHeight * 4
@@ -281,46 +297,45 @@ class _GetACallBackState extends State<GetACallBack> {
                       onTap: () {
                         setState(() {
                           if (_formkey.currentState.validate()) {
-                            if (_chosenValue == null) {
-                              Fluttertoast.showToast(
-                                  msg: "Something is missing",
-                                  backgroundColor: Colors.grey.shade200,
-                                  fontSize: unitHeight * 5,
-                                  gravity: ToastGravity.BOTTOM,
-                                  textColor: Colors.black);
-                            } else {
-                              final progress = ProgressHUD.of(context);
-                              progress?.showWithText('');
-                              provideData().then((value) async {
-                                print("value $value");
-                                if (value == true) {
-                                  Future.delayed(Duration(seconds: 3), () {
-                                    progress?.dismiss();
-                                    // Navigator.of(context)
-                                    //     .pushReplacement(
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) =>
-                                    //         Profile(),
-                                    //   ),
-                                    // );
-                                  });
-                                } else {
-                                  Future.delayed(
-                                    Duration(seconds: 3),
-                                    () {
+                              if(_fileUpload == null) {
+                                Fluttertoast.showToast(
+                                    msg: "Upload Prescription",
+                                    backgroundColor: Colors.grey.shade200,
+                                    fontSize: unitHeight * 5,
+                                    gravity: ToastGravity.BOTTOM,
+                                    textColor: Colors.black);
+                              } else {
+                                final progress = ProgressHUD.of(context);
+                                progress?.showWithText('');
+                                provideData().then((value) async {
+                                  print("value $value");
+                                  if (value.toString() == "true") {
+                                    Future.delayed(Duration(seconds: 3), () {
                                       progress?.dismiss();
                                       Fluttertoast.showToast(
-                                        msg: "Try Again",
-                                        backgroundColor: Colors.grey.shade200,
-                                        fontSize: unitHeight * 5,
-                                        gravity: ToastGravity.BOTTOM,
-                                        textColor: Colors.black,
-                                      );
-                                    },
-                                  );
-                                }
-                              });
-                            }
+                                          msg: "Successfully Done",
+                                          backgroundColor: Colors.grey.shade200,
+                                          fontSize: unitHeight * 5,
+                                          gravity: ToastGravity.BOTTOM,
+                                          textColor: Colors.black);
+                                    });
+                                  } else {
+                                    Future.delayed(
+                                      Duration(seconds: 3),
+                                          () {
+                                        progress?.dismiss();
+                                        Fluttertoast.showToast(
+                                          msg: "Try Again",
+                                          backgroundColor: Colors.grey.shade200,
+                                          fontSize: unitHeight * 5,
+                                          gravity: ToastGravity.BOTTOM,
+                                          textColor: Colors.black,
+                                        );
+                                      },
+                                    );
+                                  }
+                                });
+                              }
                           }
                         });
                       },

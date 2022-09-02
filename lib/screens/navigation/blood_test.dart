@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:geomedipath/screens/cart%20&%20payment/cart.dart';
 import 'package:geomedipath/screens/navigation/home.dart';
 import 'package:geomedipath/widgets/all_colors.dart';
 import 'package:geomedipath/widgets/card_design.dart';
@@ -95,6 +96,15 @@ class _BloodTestState extends State<BloodTest> {
             colorName: Colors.white,
           ),
           backgroundColor: orangeColor,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton.extended(
+            backgroundColor: Colors.redAccent,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Cart()));
+            }, label: TextDesign(text: "Cart", fontSize: (MediaQuery.of(context).size.height * 0.005) * 5 ,
+          fontWeight: FontWeight.bold,
+          fontfamily: "Roboto",)
         ),
         backgroundColor: background,
         body: StreamBuilder<Object>(

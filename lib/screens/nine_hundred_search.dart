@@ -17,7 +17,7 @@ import 'navigation/product_details.dart';
 class NineHundredSearch extends StatefulWidget {
   var id;
 
-  NineHundredSearch({Key key, this.id}) : super(key: key);
+  NineHundredSearch({Key key, this.id});
 
   @override
   State<NineHundredSearch> createState() => _NineHundredSearchState();
@@ -146,7 +146,7 @@ class DataDesign extends StatefulWidget {
   List list;
   int index;
 
-  DataDesign({Key key, this.list, this.index}) : super(key: key);
+  DataDesign({Key key, this.list, this.index});
 
   @override
   State<DataDesign> createState() => _DataDesignState();

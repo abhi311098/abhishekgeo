@@ -9,9 +9,10 @@ import 'package:geomedipath/screens/navigation/partner_with_us.dart';
 import 'package:geomedipath/screens/navigation/review_videos_pics.dart';
 import 'package:geomedipath/screens/navigation/tech.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainDrawer extends StatelessWidget {
-  const MainDrawer({Key key}) : super(key: key);
+  const MainDrawer({Key key});
 
   Widget textStyle(String text, Function tapHandler) {
     return Column(
@@ -40,6 +41,14 @@ class MainDrawer extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  _launchURL(var url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -128,7 +137,19 @@ class MainDrawer extends StatelessWidget {
                   ),
                 );
               },
+            ),
+            textStyle(
+              "Facebook Page",
+              () {
+                _launchURL("https://www.facebook.com/people/Geomedipath/100063840258114/");
+              },
             ),textStyle(
+              "Instagram Page",
+              () {
+               _launchURL("https://www.instagram.com/geomedipath_official/");
+              },
+            ),
+            textStyle(
               "Sign Out",
               () async {
                 SharedPreferences preferences = await SharedPreferences.getInstance();

@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderScreen extends StatefulWidget {
-  const OrderScreen({Key key}) : super(key: key);
+  const OrderScreen({Key key});
 
   @override
   _OrderScreenState createState() => _OrderScreenState();
@@ -135,7 +135,7 @@ class _OrderScreenState extends State<OrderScreen> {
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
-                  itemCount: list[1]['reports'].length,
+                  itemCount: list[index]['reports'].length,
                   itemBuilder: (ctx, index1) {
                     return IconButton(onPressed: () {
                       _launchURL(list[index]['reports'][index1]);

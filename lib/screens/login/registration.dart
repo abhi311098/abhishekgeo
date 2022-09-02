@@ -39,18 +39,16 @@ class _RegistrationState extends State<Registration> {
 
   Future loginData() async {
     http.Response response;
-    var url = Uri.parse("https://app.geomedipath.com/App/UserRegister/");
+    var url = Uri.parse("https://app.geomedipath.com/App/UserRegister");
     print(      "name" + "${userName.text}" +
         "email" + "${userEmail.text}" +
         "phone" + "${userMob.text}" +
-        "password" + "${userPass.text}" +
-        "city"+ _chosenValue,);
+        "password" + "${userPass.text}");
     response = await http.post(url, body: {
       "name": "${userName.text}",
       "email": "${userEmail.text}",
       "phone": "${userMob.text}",
       "password": "${userPass.text}",
-      "city": _chosenValue.toUpperCase(),
     });
     return jsonDecode(response.body);
   }
@@ -86,11 +84,41 @@ class _RegistrationState extends State<Registration> {
                         icon: Icons.email_outlined,
                       ),
                       spaceSized(0.01),
-                      TextfieldDesign(
+                      TextFormField(
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontFamily: "OpenSans",
+                          fontSize: unitHeight * 4.2,
+                        ),
+                        decoration: InputDecoration(
+                          prefixText: "+91",
+                          labelText: "Enter your number",
+                          errorStyle: TextStyle(color: Colors.red.shade900),
+                          labelStyle: TextStyle(
+                            color: bigTextColor,
+                            fontFamily: "Roboto",
+                            fontSize: unitHeight * 4,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.phone,
+                          ),
+                          hintStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: unitHeight * 4,
+                          fontFamily: "Lato",
+                        ),
+                        ),
+                        maxLength: 10,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please Enter Phone Number';
+                          } else if (value.length != 10) {
+                            return 'Please Enter 10 Digits Number';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.phone,
                         controller: userMob,
-                        text: "Mobile Number",
-                        //hint: "0987654321",
-                        icon: Icons.phone,
                       ),
                       spaceSized(0.01),
                       TextFormField(
@@ -133,36 +161,6 @@ class _RegistrationState extends State<Registration> {
                       spaceSized(0.01),
                       Container(
                         width: double.infinity,
-                        child: DropdownButton<String>(
-                          value: _chosenValue,
-                          //elevation: 5,
-                          isExpanded: true,
-                          style: TextStyle(color: Colors.black),
-                          items: <String>["DELHI", "GURUGRAM", "NOIDA"]
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          hint: Text(
-                            "Select Your City",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 4.5 * unitHeight,
-                                fontFamily: "Roboto",
-                                fontWeight: FontWeight.w600),
-                          ),
-                          onChanged: (String value) {
-                            setState(() {
-                              _chosenValue = value;
-                            });
-                          },
-                        ),
-                      ),
-                      spaceSized(0.01),
-                      Container(
-                        width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.orange.shade800,
                           borderRadius: BorderRadius.circular(10),
@@ -177,24 +175,22 @@ class _RegistrationState extends State<Registration> {
                               print("_chosenValue $_chosenValue");
                               setState(() {
                                 if (_formkey.currentState.validate()) {
-                                  if (_chosenValue == null) {
-                                    Fluttertoast.showToast(
-                                        msg: "Select Your City",
-                                        backgroundColor: Colors.grey.shade200,
-                                        fontSize: 18,
-                                        gravity: ToastGravity.BOTTOM,
-                                        textColor: Colors.black);
-                                  } else {
                                     final progress = ProgressHUD.of(context);
                                     progress?.showWithText('');
                                     loginData().then((value) async {
                                       print("value $value");
-                                      if (value == false) {
+                                      if (value['status']) {
                                         Future.delayed(Duration(seconds: 3),
                                             () {
                                           progress?.dismiss();
+                                          Navigator.of(context)
+                                              .pushReplacement(
+                                            MaterialPageRoute(
+                                              builder: (context) => Otp(mobileNumber: userMob.text,),
+                                            ),
+                                          );
                                           Fluttertoast.showToast(
-                                              msg: "You are already Registered",
+                                              msg: value['msg'],
                                               backgroundColor:
                                                   Colors.grey.shade200,
                                               fontSize: 18,
@@ -203,15 +199,16 @@ class _RegistrationState extends State<Registration> {
                                         });
                                       } else {
                                         progress?.dismiss();
-                                        Navigator.of(context)
-                                            .pushReplacement(
-                                          MaterialPageRoute(
-                                            builder: (context) => Otp(mobileNumber: userMob.text,),
-                                          ),
-                                        );
+                                        Fluttertoast.showToast(
+                                            msg: value['msg'],
+                                            backgroundColor:
+                                            Colors.grey.shade200,
+                                            fontSize: 18,
+                                            gravity: ToastGravity.BOTTOM,
+                                            textColor: Colors.black);
                                       }
                                     });
-                                  }
+
                                 }
                               });
                             }),

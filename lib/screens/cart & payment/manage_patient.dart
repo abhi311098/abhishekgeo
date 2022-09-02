@@ -14,7 +14,7 @@ import 'cart.dart';
 class ManagePatient extends StatefulWidget {
   var id;
 
-  ManagePatient({Key key, this.id}) : super(key: key);
+  ManagePatient({Key key, this.id});
 
   @override
   _ManagePatientState createState() => _ManagePatientState();
@@ -51,6 +51,7 @@ class _ManagePatientState extends State<ManagePatient> {
       setState(() {
         _streamController.add(jsonDecode(response.body));
         List map = jsonDecode(response.body);
+        print("Abhishek $map");
         map.forEach((element) {
           _selecteCategorys.add(element['selected']);
         });
@@ -71,6 +72,7 @@ class _ManagePatientState extends State<ManagePatient> {
       "https://app.geomedipath.com/App/AddPatient",
     );
     print(url);
+    print("Abhishek $id");
     response = await http.post(url, body: {
       "cart_id": widget.id,
       "patient_ids": id.toString(),
@@ -193,6 +195,7 @@ class _ManagePatientState extends State<ManagePatient> {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => EditPatient(
                                 apiType: "new",
+                            cartId: widget.id,
                               )));
                     },
                     child: Card(
@@ -262,6 +265,7 @@ class _ManagePatientState extends State<ManagePatient> {
                                   onChanged: (bool value) {
                                     setState(() {
                                       _selecteCategorys[index] = value;
+                                      print("Abhishek $value");
                                     });
                                   },
                                   value: _selecteCategorys[index],
@@ -330,7 +334,7 @@ class _ManagePatientState extends State<ManagePatient> {
                       for (int i = 0; i < list.length; i++) {
                         if (_selecteCategorys[i]) {
                           p_id.add(list[i]['id']);
-                          print(p_id);
+                          print("Abhishek $p_id");
                         }
                       }
                       if (p_id.length == 0) {

@@ -18,9 +18,9 @@ import 'success_order.dart';
 class BillingInformation extends StatefulWidget {
   String date, time;
   int addressIndex;
-  var address_id;
+  String address_id;
 
-  BillingInformation({Key key, this.time, this.date, this.addressIndex, address_id}) : super(key: key);
+  BillingInformation({this.time, this.date, this.addressIndex, this.address_id});
 
   @override
   _BillingInformationState createState() => _BillingInformationState();
@@ -34,6 +34,7 @@ class _BillingInformationState extends State<BillingInformation> {
   List address;
   String paymentId = "";
   bool load;
+  bool btn = true;
   String price;
   String _site = "Online";
   Map map;
@@ -45,7 +46,7 @@ class _BillingInformationState extends State<BillingInformation> {
   void initState() {
     super.initState();
     _streamController = StreamController();
-    _stream = _streamController.stream;
+    _stream = _streamController?.stream;
     fetchData();
     fetchdata();
     _razorpay = Razorpay();
@@ -69,7 +70,7 @@ class _BillingInformationState extends State<BillingInformation> {
     };
 
     try {
-      _razorpay.open(options);
+      _razorpay?.open(options);
     } catch (e) {
       debugPrint('Error: $e');
     }
@@ -80,7 +81,7 @@ class _BillingInformationState extends State<BillingInformation> {
     print("abhi ${response.signature}");
     print("abhi ${response.paymentId}");
     Fluttertoast.showToast(
-        msg: "SUCCESS: " + response.paymentId, toastLength: Toast.LENGTH_SHORT,
+        msg: "SUCCESS: " + response.paymentId.toString(), toastLength: Toast.LENGTH_SHORT,
         backgroundColor: Colors.lightBlue.shade100,
         fontSize: 18,
         gravity: ToastGravity.BOTTOM,
@@ -88,7 +89,7 @@ class _BillingInformationState extends State<BillingInformation> {
     setState(() {
       paymentId = response.paymentId.toString();
     });
-    providedata(map['total_price'].toString());
+    providedata(map['final_price'].toString());
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -111,7 +112,7 @@ class _BillingInformationState extends State<BillingInformation> {
       // = response.walletName;
     });
     Fluttertoast.showToast(
-        msg: "EXTERNAL_WALLET: " + response.walletName,
+        msg: "EXTERNAL_WALLET: " + response.walletName.toString(),
         toastLength: Toast.LENGTH_SHORT,
         backgroundColor: Colors.lightBlue.shade100,
         fontSize: 18,
@@ -149,7 +150,8 @@ class _BillingInformationState extends State<BillingInformation> {
         "slot": "${widget.time}",
         "booking_date": "${widget.date}",
         "price": amount,
-        "payment_id": paymentId
+        "coupon_price": map['coupon_price'].toString(),
+        "payment_id": paymentId,
       });
       if (response.statusCode == 200) {
         var res = jsonDecode(response.body);
@@ -461,7 +463,7 @@ class _BillingInformationState extends State<BillingInformation> {
               SizedBox(
                 width: screenSize.width * 0.68,
                 child: Text(
-                  "MRP  Total",
+                  "MRP",
                   style: TextStyle(
                       fontFamily: "Roboto",
                       fontWeight: FontWeight.normal,
@@ -495,6 +497,74 @@ class _BillingInformationState extends State<BillingInformation> {
               SizedBox(
                 width: screenSize.width * 0.68,
                 child: Text(
+                  "Collection Charge",
+                  style: TextStyle(
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.normal,
+                      fontSize: Font_Size * 3.8,
+                      color: smallTextColor),
+                ),
+              ),
+              SizedBox(
+                width: screenSize.width * 0.01,
+              ),
+              SizedBox(
+                width: screenSize.width * 0.25,
+                child: Text(
+                    map['cl_charge'].toString() == "0" ? "Free" : "+₹${map['cl_charge'].toString()}",
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                      fontFamily: "Lato",
+                      fontWeight: FontWeight.normal,
+                      fontSize: Font_Size * 3.8,
+                      color: smallTextColor),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: screenSize.height * 0.01,
+          ),
+          map['coupon_price'].toString() == "0" ? Container() : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: screenSize.width * 0.68,
+                child: Text(
+                  "Coupon Applied",
+                  style: TextStyle(
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.normal,
+                      fontSize: Font_Size * 3.8,
+                      color: smallTextColor),
+                ),
+              ),
+              SizedBox(
+                width: screenSize.width * 0.01,
+              ),
+              SizedBox(
+                width: screenSize.width * 0.25,
+                child: Text(
+                  "-₹${map['coupon_price'].toString()}",
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                      fontFamily: "Lato",
+                      fontWeight: FontWeight.normal,
+                      fontSize: Font_Size * 3.8,
+                      color: smallTextColor),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: screenSize.height * 0.01,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: screenSize.width * 0.68,
+                child: Text(
                   "TO BE PAID",
                   style: TextStyle(
                       fontFamily: "Roboto",
@@ -509,7 +579,7 @@ class _BillingInformationState extends State<BillingInformation> {
               SizedBox(
                 width: screenSize.width * 0.25,
                 child: Text(
-                  "₹${map['total_price'].toString()}",
+                  "₹${map['final_price'].toString()}",
                   textAlign: TextAlign.end,
                   style: TextStyle(
                       fontFamily: "Lato",
@@ -609,7 +679,7 @@ class _BillingInformationState extends State<BillingInformation> {
                                     groupValue: _site,
                                     onChanged: (value) {
                                       setState(() {
-                                        _site = value;
+                                        _site = value.toString();
                                         print("_site 1 $_site");
                                       });
                                     },
@@ -622,7 +692,7 @@ class _BillingInformationState extends State<BillingInformation> {
                                     groupValue: _site,
                                     onChanged: (value) {
                                       setState(() {
-                                        _site = value;
+                                        _site = value.toString();
                                         print("_site 2 $_site");
                                       });
                                     },
@@ -638,15 +708,21 @@ class _BillingInformationState extends State<BillingInformation> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.01,
                   ),
-                  InkWell(
+                  btn ? InkWell(
                     highlightColor: Colors.white,
                     onTap: () {
+                      setState(() {
+                        btn = false;
+                      });
                       _site == "Online" ?
-                     openCheckout(map['total_price'].toString()) : providedata(map['total_price'].toString()).then((value) {
+                     openCheckout(map['final_price'].toString()) : providedata(map['final_price'].toString()).then((value) {
                        if(value) {
                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Home()
                          ), (route) => false);
                        } else {
+                         setState(() {
+                           btn = true;
+                         });
                          return Fluttertoast.showToast(msg: "Try Again");
                        }
                       });
@@ -685,7 +761,7 @@ class _BillingInformationState extends State<BillingInformation> {
                         ],
                       ),
                     ),
-                  )
+                  ) : Container(),
                 ],
               ),
             );

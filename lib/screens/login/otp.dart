@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Otp extends StatefulWidget {
   var mobileNumber;
 
-  Otp({Key key, this.mobileNumber}) : super(key: key);
+  Otp({Key key, this.mobileNumber});
 
   @override
   _OtpState createState() => _OtpState();

@@ -16,7 +16,7 @@ class Address extends StatefulWidget {
   bool buttonShow;
   String date, time;
   bool routeFromTimeslot;
-  Address({Key key, this.date, this.time, this.buttonShow, this.routeFromTimeslot}) : super(key: key);
+  Address({this.date, this.time, this.buttonShow, this.routeFromTimeslot});
 
   @override
   _AddressState createState() => _AddressState();
@@ -101,6 +101,7 @@ class _AddressState extends State<Address> {
 
   @override
   Widget build(BuildContext context) {
+    print("Address => ${widget.routeFromTimeslot}");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: orangeColor,
@@ -299,6 +300,7 @@ class _AddressState extends State<Address> {
                                         builder: (context) => EditAddress(
                                           newAddress: "edit",
                                           addressId: list[index]['id'],
+                                            routeFromTimeslot: widget.routeFromTimeslot,
                                         ),
                                       ),
                                     );

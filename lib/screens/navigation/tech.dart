@@ -9,7 +9,7 @@ import 'package:geomedipath/widgets/text_design.dart';
 import 'package:http/http.dart' as http;
 
 class Tech extends StatefulWidget {
-  Tech({Key key}) : super(key: key);
+  Tech({Key key});
 
   @override
   State<Tech> createState() => _TechState();

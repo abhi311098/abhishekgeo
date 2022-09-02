@@ -22,11 +22,8 @@ class _ResetPasswordState extends State<ResetPassword> {
   Future provideNumber() async {
     print(userNumber.text);
     http.Response response;
-    var url = Uri.parse("https://app.geomedipath.com/App/UserRegister");
-    response = await http.post(url, body: {
-      "type": "forgot",
-      "phone": userNumber.text,
-    });
+    var url = Uri.parse("https://app.geomedipath.com/App/ForgotPassword/${userNumber.text}");
+    response = await http.get(url,);
     return response.body;
   }
 
@@ -36,7 +33,7 @@ class _ResetPasswordState extends State<ResetPassword> {
     http.Response response;
     var url = Uri.parse("https://app.geomedipath.com/App/ForgotPassword");
     response = await http.post(url, body: {
-      "type": "otp",
+      "action": "otp",
       "phone": userNumber.text,
       "otp": userOTP.text,
     });

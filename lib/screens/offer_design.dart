@@ -17,7 +17,7 @@ import 'navigation/product_details.dart';
 class OfferDesign extends StatefulWidget {
   var id;
 
-  OfferDesign({Key key, this.id}) : super(key: key);
+  OfferDesign({Key key, this.id});
 
   @override
   State<OfferDesign> createState() => _OfferDesignState();
@@ -143,7 +143,7 @@ class DataDesign extends StatefulWidget {
   List list;
   int index;
 
-  DataDesign({Key key, this.list, this.index}) : super(key: key);
+  DataDesign({Key key, this.list, this.index});
 
   @override
   State<DataDesign> createState() => _DataDesignState();

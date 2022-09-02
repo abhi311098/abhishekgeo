@@ -16,7 +16,7 @@ class ProductDetails extends StatefulWidget {
   var name;
   var id;
 
-  ProductDetails({Key key, this.id, this.name}) : super(key: key);
+  ProductDetails({Key key, this.id, this.name});
 
   @override
   _ProductDetailsState createState() => _ProductDetailsState();

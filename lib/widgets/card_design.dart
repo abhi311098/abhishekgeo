@@ -59,7 +59,7 @@ class SearchDesign extends StatefulWidget {
   List list;
   int index;
 
-  SearchDesign({Key key, this.index, this.list}) : super(key: key);
+  SearchDesign({Key key, this.index, this.list});
 
   @override
   State<SearchDesign> createState() => _SearchDesignState();

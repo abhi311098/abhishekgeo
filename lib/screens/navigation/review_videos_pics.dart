@@ -9,7 +9,7 @@ import 'package:geomedipath/widgets/text_design.dart';
 import 'package:http/http.dart' as http;
 
 class Reviewvideospics extends StatefulWidget {
-  Reviewvideospics({Key key}) : super(key: key);
+  Reviewvideospics({Key key});
 
   @override
   State<Reviewvideospics> createState() => _ReviewvideospicsState();

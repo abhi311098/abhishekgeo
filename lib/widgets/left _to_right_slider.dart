@@ -13,7 +13,7 @@ import 'text_design.dart';
 class LeftToRightSlider extends StatefulWidget {
   List list;
   int index;
-  LeftToRightSlider({Key key, this.list, this.index}) : super(key: key);
+  LeftToRightSlider({Key key, this.list, this.index});
 
   @override
   _LeftToRightSliderState createState() => _LeftToRightSliderState();
@@ -61,17 +61,19 @@ class _LeftToRightSliderState extends State<LeftToRightSlider> {
                         imageUrl:
                         "https://app.geomedipath.com/uploads/test/${list[index]['feature_image']}",
                         width: double.infinity,
-                        errorWidget: (context, url, error) => Image.asset("assets/images/image_not_found.jpg",
+                        errorWidget: (context, url, error) =>
+                            Image.asset("assets/images/image_not_found.jpg",
                           width: double.infinity,
-                          filterQuality: FilterQuality.high,
+                          filterQuality: FilterQuality.low,
                           fit: BoxFit.fill,
                         ),
-                        placeholder: (context, url) => Image.asset("assets/images/image_not_found.jpg",
-                          width: double.infinity,
-                          filterQuality: FilterQuality.high,
-                          fit: BoxFit.fill,
-                        ),
-                        filterQuality: FilterQuality.high,
+                        placeholder: (context, url) => Center(child: CircularProgressIndicator(),),
+                        //     Image.asset("assets/images/image_not_found.jpg",
+                        //   width: double.infinity,
+                        //   filterQuality: FilterQuality.high,
+                        //   fit: BoxFit.fill,
+                        // ),
+                        filterQuality: FilterQuality.low,
                         fit: BoxFit.fill,
                       ),
                     ),

@@ -77,7 +77,7 @@ class Account extends StatelessWidget {
                   () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => Address(buttonShow: false,),
+                        builder: (context) => Address(buttonShow: false, routeFromTimeslot: false),
                       ),
                     );
                   },

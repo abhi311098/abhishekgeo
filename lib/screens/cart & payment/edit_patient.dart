@@ -16,7 +16,7 @@ class EditPatient extends StatefulWidget {
   String apiType;
   String patientId;
   String cartId;
-  EditPatient({Key key, this.apiType, this.patientId, this.cartId}) : super(key: key);
+  EditPatient({Key key, this.apiType, this.patientId, this.cartId});
 
   @override
   _EditPatientState createState() => _EditPatientState();
@@ -235,7 +235,7 @@ class _EditPatientState extends State<EditPatient> {
               onTap: () {
                 provideData3().then((value) {
                   if(value.toString() == "true") {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ManagePatient()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ManagePatient(id: widget.cartId)));
                   } else {
                     Fluttertoast.showToast(msg: "Failed");
                   }

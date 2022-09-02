@@ -168,7 +168,6 @@ class _ProfileState extends State<Profile> {
                       txtDesign("Email", map['email'], context),
                       txtDesign("Address", map['address'], context),
                       txtDesign("Gender", map['gender'], context),
-                      txtDesign("City", map['city'], context),
                       txtDesign("Date Of Birth", map['dob'].toString() == "" ? "" : map['dob'].toString().replaceRange(10, 23, ""), context),
                       InkWell(
                         onTap: () {

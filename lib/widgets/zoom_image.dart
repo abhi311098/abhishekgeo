@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:geomedipath/widgets/all_colors.dart';
 
 class ZoomImage extends StatelessWidget {
 
@@ -12,7 +13,7 @@ class ZoomImage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        backgroundColor: Colors.white,
+        backgroundColor: orangeColor,
         // title: TextDesign(
         //   text: "Wishlist",
         //   fontSize: 18,

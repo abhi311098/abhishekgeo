@@ -9,7 +9,7 @@ import 'package:geomedipath/widgets/text_design.dart';
 import 'package:http/http.dart' as http;
 
 class TimeSlot extends StatefulWidget {
-  const TimeSlot({Key key}) : super(key: key);
+  const TimeSlot({Key key});
 
   @override
   _TimeSlotState createState() => _TimeSlotState();

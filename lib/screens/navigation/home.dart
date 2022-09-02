@@ -170,6 +170,7 @@ class _HomeState extends State<Home> {
     fetchData();
     fetchData1();
     fetchData3();
+    //Future.delayed(Duration.zero, () => aabb(context));
   }
 
   Widget ss(BuildContext context, index) {
@@ -204,7 +205,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-
   Future<bool> _onBackPressed() {
     return showDialog(
       context: context,
@@ -227,11 +227,37 @@ class _HomeState extends State<Home> {
         false;
   }
 
+  void aabb(BuildContext context) {
+     showDialog(
+        context: context,
+        builder: (BuildContext context)
+        {
+          return AlertDialog(
+            title: Image.asset('assets/images/logo.png'),
+            content: Text('Congratulations on winning 1000 free test coupon'),
+            actions: [
+              ElevatedButton(onPressed: () {
+                Navigator.pop(context);
+              }, 
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(orangeColor),
+                  ),
+                  child: Text('Redeem Now',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                  )),
+            ],
+          );
+        }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     double aa = MediaQuery.of(context).size.height * 0.17;
     double unitHeight = MediaQuery.of(context).size.height * 0.005;
+
     return WillPopScope(
       onWillPop: () => _onBackPressed(),
       child: Scaffold(
@@ -355,25 +381,27 @@ class _HomeState extends State<Home> {
                         height: MediaQuery.of(context).size.height * 0.25,
                         child: Swiper(
                           autoplay: true,
-                          duration: 5,
+                          duration: 15,
                           itemWidth: double.infinity,
                           itemHeight: MediaQuery.of(context).size.height * 0.25,
                           itemCount: slider.length,
                           pagination:
                               SwiperPagination(builder: SwiperPagination.dots),
                           itemBuilder: (context, index) => CachedNetworkImage(
+                            filterQuality: FilterQuality.low,
                             imageUrl:
                                 "https://app.geomedipath.com/uploads/slider/${slider[index]['image']}",
-                            placeholder: (context, url) => Image.asset(
-                              "assets/images/image_not_found.jpg",
-                              width: double.infinity,
-                              filterQuality: FilterQuality.high,
-                              fit: BoxFit.fill,
-                            ),
+                            placeholder: (context, url) => Center(child: CircularProgressIndicator(),),
+                            //     Image.asset(
+                            //   "assets/images/image_not_found.jpg",
+                            //   width: double.infinity,
+                            //   filterQuality: FilterQuality.low,
+                            //   fit: BoxFit.fill,
+                            // ),
                             errorWidget: (context, url, error) => Image.asset(
                               "assets/images/image_not_found.jpg",
                               width: double.infinity,
-                              filterQuality: FilterQuality.high,
+                              filterQuality: FilterQuality.low,
                               fit: BoxFit.fill,
                             ),
                             fit: BoxFit.fill,
@@ -424,10 +452,10 @@ class _HomeState extends State<Home> {
                                                       0.01,
                                                 ),
                                                 width: double.infinity,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.31,
+                                                // height: MediaQuery.of(context)
+                                                //         .size
+                                                //         .height *
+                                                //     0.31,
                                                 padding: EdgeInsets.symmetric(
                                                   //horizontal: MediaQuery.of(context).size.width * 0.02,
                                                   vertical: MediaQuery.of(context)
@@ -435,10 +463,9 @@ class _HomeState extends State<Home> {
                                                           .height *
                                                       0.01,
                                                 ),
-                                                child: ListView.builder(
+                                                child: GridView.builder(
+                                                  physics: NeverScrollableScrollPhysics(),
                                                   shrinkWrap: true,
-                                                  scrollDirection:
-                                                      Axis.horizontal,
                                                   itemBuilder: (context, index1) {
                                                     // List first = blood_test_list[index]['usp'];
                                                     // List second = blood_test_list[index]['tests'];
@@ -454,7 +481,7 @@ class _HomeState extends State<Home> {
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .height *
-                                                              0.25,
+                                                              0.2,
                                                       child: LeftToRightSlider(
                                                         list:
                                                         blood_test_list[index]['usp'].length != 0 ? blood_test_list[index]['usp'] + (blood_test_list[index]['tests'])  : blood_test_list[index]
@@ -467,6 +494,12 @@ class _HomeState extends State<Home> {
                                                       blood_test_list[index]['usp'].length != 0 ? blood_test_list[index]['usp'].length + blood_test_list[index]['tests'].length : blood_test_list[index]
                                                               ['tests']
                                                           .length,
+                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisSpacing: MediaQuery.of(context).size.width * 0.03,
+                                                    mainAxisSpacing: MediaQuery.of(context).size.height * 0.03,
+                                                    mainAxisExtent: MediaQuery.of(context).size.height * 0.3,
+                                                    crossAxisCount: 2,
+                                                  ),
                                                 ),
                                               ),
                                       ],
@@ -491,7 +524,7 @@ class _HomeState extends State<Home> {
                                   width: double.infinity,
                                   height:
                                       MediaQuery.of(context).size.height * 0.25,
-                                  filterQuality: FilterQuality.high,
+                                  filterQuality: FilterQuality.low,
                                   placeholder: (context, url) => Image.asset(
                                     "assets/images/image_not_found.jpg",
                                     width: double.infinity,

@@ -3,7 +3,7 @@ import 'package:geomedipath/screens/navigation/home.dart';
 import 'package:lottie/lottie.dart';
 
 class SuccessOrder extends StatefulWidget {
-  SuccessOrder({Key key}) : super(key: key);
+  SuccessOrder({Key key});
 
   @override
   _SuccessOrderState createState() => _SuccessOrderState();
